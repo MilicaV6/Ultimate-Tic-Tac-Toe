@@ -32,14 +32,15 @@ class Board:
     
    # frame=None
     def __init__(self,master,i,j):
-        self.frame=Frame(master,height=100,width=100,bg="violet")
+        self.frame=Frame(master,height=100,width=100,bg="yellow")
         self.frame.grid(row=i, column=j, padx=3, pady=3)
         
-        self.board=white_board()
+        self.table=white_board()
         self.game_status=STATUS_CONTINUE
         self.grid=[]
         self.cells=[[Cell(self.frame,l,k) for k in range (3)]for l in range(3)]
-               
+        self.winner=None
+        self.active=True
             
     #     #true for user turn
         self.gamer_turn=True
@@ -57,19 +58,19 @@ class Board:
     def update_board(self):
         for i in range(3):
             for j in range(3):
-                self.cells[i][j].button.config(text=str(self.board[i][j]))
+                self.cells[i][j].button.config(text=str(self.table[i][j]))
 
-        self.game_status=get_game_status(self.board)
+        self.game_status=get_game_status(self)
         print(self.game_status)
         if self.game_status!=STATUS_CONTINUE:
-            game_over(self.game_status)
-            self.board=white_board()
+            label_winner=Label(self.frame,text=self.game_status,justify=CENTER, height=2,width=4, font=("Arial",100,"bold"))
+            label_winner.place(in_=self.frame,relx=0.5,rely=0.5,anchor=CENTER)
+            #label_winner.config(bg='systemTransparent')
+            self.winner=self.game_status
             for i in range(3):
                 for j in range(3):
-                    self.cells[i][j].button.config(text=self.board[i][j])
-            self.gamer_turn=messagebox.askyesno("Who wants to start?", "Do you want to start first?")
-            if not self.gamer_turn:
-                self.ai_turn()                
+                    self.cells[i][j].button.config(state=DISABLED)
+                         
                 
   
             
