@@ -8,13 +8,7 @@ def white_board():
     board=[["" for i in range(3)] for i in range (3)]
     return board
 
-def game_over(game_status):
-    if game_status==X:
-        messagebox.showinfo("Result", "You won! Play again.")
-    elif game_status==O:
-        messagebox.showinfo("Result", "Computer won. Retry?")
-    else:
-        messagebox.showinfo("Result","Tie!")
+
 class Cell:
     cell_position=0
     def __init__(self, master,k,l):
@@ -36,7 +30,7 @@ class Board:
         self.frame.grid(row=i, column=j, padx=3, pady=3)
         
         self.table=white_board()
-        self.game_status=STATUS_CONTINUE
+        self.game_status=None
         self.grid=[]
         self.cells=[[Cell(self.frame,l,k) for k in range (3)]for l in range(3)]
         self.winner=None
@@ -47,7 +41,8 @@ class Board:
         if not self.gamer_turn:
             self.ai_turn()
         
-                    
+    
+
     def check_if_in_board(self,event):
         for i in range (3):
             for j in range (3):
@@ -60,9 +55,9 @@ class Board:
             for j in range(3):
                 self.cells[i][j].button.config(text=str(self.table[i][j]))
 
-        self.game_status=get_game_status(self)
+        self.game_status=check_small_board_win(self)
         print(self.game_status)
-        if self.game_status!=STATUS_CONTINUE:
+        if self.game_status!=None:
             label_winner=Label(self.frame,text=self.game_status,justify=CENTER, height=2,width=4, font=("Arial",100,"bold"))
             label_winner.place(in_=self.frame,relx=0.5,rely=0.5,anchor=CENTER)
             #label_winner.config(bg='systemTransparent')
